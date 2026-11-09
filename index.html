@@ -53,7 +53,6 @@
             margin-bottom: 20px;
         }
 
-        /* Área de Instrucción Principal Simplificada */
         .instruction-box {
             min-height: 60px;
             display: flex;
@@ -64,7 +63,7 @@
         }
 
         .instruction {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--primary-color);
             line-height: 1.2;
@@ -72,7 +71,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Pelota Somática */
         .ball-wrapper {
             position: relative;
             width: 220px;
@@ -93,7 +91,6 @@
             will-change: transform;
         }
 
-        /* Barra de Progreso */
         .progress-bar-container {
             width: 100%;
             height: 5px;
@@ -109,7 +106,6 @@
             background-color: var(--primary-color);
         }
 
-        /* Botones */
         .btn-group {
             display: flex;
             flex-direction: column;
@@ -197,37 +193,36 @@
         const startBtn = document.getElementById('startBtn');
         const skipBtn = document.getElementById('skipBtn');
 
-        /*
-          MAPA DE ÓRDENES PRINCIPALES BASADO DIRECTAMENTE EN EL AUDIO
-          - Se eliminó el texto secundario redundante.
-          - Los tiempos están calibrados con precisión de milisegundos para sincronizarse con la voz del locutor.
+        /* 
+          LÍNEA DE TIEMPO ESTRICTA (AUDIO 2)
+          Calibrada de forma directa con las locuciones exactas de inhalación, sostén y exhalación.
         */
         const TIMELINE = [
-            { start: 0.0,  end: 8.5,  title: "Prepárate", action: "static", scale: 1.0 },
+            { start: 0.0,  end: 9.5,   title: "Prepárate", action: "static", scale: 1.0 },
             
             // Ciclo 1
-            { start: 8.5,  end: 15.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 15.0, end: 17.5, title: "Sostén", action: "hold", scale: 0.6 },
-            { start: 17.5, end: 25.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            { start: 9.5,  end: 16.5,  title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 16.5, end: 19.5,  title: "Sostén", action: "hold", scale: 0.6 },
+            { start: 19.5, end: 28.0,  title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
             // Ciclo 2
-            { start: 25.5, end: 32.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 32.0, end: 42.5, title: "Sostén la Tensión", action: "hold", scale: 0.6 },
-            { start: 42.5, end: 51.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            { start: 28.0, end: 35.0,  title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 35.0, end: 45.0,  title: "Sostén", action: "hold", scale: 0.6 },
+            { start: 45.0, end: 54.0,  title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
             // Ciclo 3
-            { start: 51.5, end: 58.5, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 58.5, end: 65.0, title: "Sostén la Presión", action: "hold", scale: 0.6 },
-            { start: 65.0, end: 74.0, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            { start: 54.0, end: 61.0,  title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 61.0, end: 68.0,  title: "Sostén", action: "hold", scale: 0.6 },
+            { start: 68.0, end: 77.0,  title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            // Fase de descanso y observación
-            { start: 74.0, end: 125.0, title: "Respiración Suave", action: "static", scale: 1.0 },
+            // Transición y descanso pasivo
+            { start: 77.0, end: 128.0, title: "Respiración Suave", action: "static", scale: 1.0 },
 
-            // Cierre
-            { start: 125.0, end: 130.0, title: "Inhala", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.7 },
-            { start: 130.0, end: 134.0, title: "Sostén", action: "hold", scale: 0.7 },
-            { start: 134.0, end: 142.0, title: "Exhala y Libera", action: "release", scaleStart: 0.7, scaleEnd: 1.0 },
-            { start: 142.0, end: 150.0, title: "Calma Completada", action: "static", scale: 1.0 }
+            // Cierre final
+            { start: 128.0, end: 134.0, title: "Inhala", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.7 },
+            { start: 134.0, end: 138.0, title: "Sostén", action: "hold", scale: 0.7 },
+            { start: 138.0, end: 147.0, title: "Exhala y Libera", action: "release", scaleStart: 0.7, scaleEnd: 1.0 },
+            { start: 147.0, end: 160.0, title: "Calma Completada", action: "static", scale: 1.0 }
         ];
 
         function toggleExercise() {
@@ -304,19 +299,17 @@
                     progressBar.style.width = ((t / currentAudio.duration) * 100) + "%";
                 }
 
-                // Obtener el bloque actual de la línea de tiempo
+                // Identificar el segmento exacto según el segundo transcurrido
                 const step = TIMELINE.find(s => t >= s.start && t < s.end) || TIMELINE[TIMELINE.length - 1];
 
                 instructionText.textContent = step.title;
 
                 let currentScale = 1.0;
 
-                if (step.action === "static") {
-                    currentScale = step.scale;
-                } else if (step.action === "hold") {
+                if (step.action === "static" || step.action === "hold") {
                     currentScale = step.scale;
                 } else if (step.action === "squeeze" || step.action === "release") {
-                    // Cálculo de escala fluido sincronizado con el avance del tiempo
+                    // Interpolación lineal de precisión para garantizar una compresión/expansión gradual sin saltos
                     const duration = step.end - step.start;
                     const elapsed = Math.max(0, Math.min(duration, t - step.start));
                     const progress = elapsed / duration;

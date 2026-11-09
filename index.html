@@ -193,10 +193,8 @@
         const skipBtn = document.getElementById('skipBtn');
 
         /* 
-          LÍNEA DE TIEMPO RECALIBRADA (Segundos absolutos de Audio2.mp3)
-          - Cuando el título es "", la pantalla está limpia y la pelota descansa quieta.
-          - Las acciones de compresión (squeeze), retención (hold) y expansión (release) ocurren 
-            únicamente en el tramo exacto donde la voz emite la orden.
+          LÍNEA DE TIEMPO RECALIBRADA MILIMÉTRICAMENTE (AUDIO 2)
+          - Incluye los momentos exactos de "Vuelves a apretar y respirar" sincronizados con la compresión de la pelota.
         */
         const TIMELINE = [
             { start: 0.0,  end: 14.2, title: "", action: "static", scale: 1.0 },
@@ -207,29 +205,29 @@
             { start: 24.0, end: 32.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
             // Transición sin texto
-            { start: 32.5, end: 39.5, title: "", action: "static", scale: 1.0 },
+            { start: 32.5, end: 38.0, title: "", action: "static", scale: 1.0 },
 
-            // Ciclo 2
-            { start: 39.5, end: 46.5, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 46.5, end: 56.5, title: "Sostén", action: "hold", scale: 0.6 },
-            { start: 56.5, end: 65.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            // Ciclo 2 (Incluye la indicación de apretar profundamente y respirar)
+            { start: 38.0, end: 45.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 45.0, end: 54.0, title: "Sostén", action: "hold", scale: 0.6 },
+            { start: 54.0, end: 62.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
             // Transición sin texto
-            { start: 65.5, end: 72.0, title: "", action: "static", scale: 1.0 },
+            { start: 62.5, end: 69.0, title: "", action: "static", scale: 1.0 },
 
-            // Ciclo 3
-            { start: 72.0, end: 79.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 79.0, end: 86.0, title: "Sostén", action: "hold", scale: 0.6 },
-            { start: 86.0, end: 95.0, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            // Ciclo 3 ("Vuelves a apretar profundamente y respiras")
+            { start: 69.0, end: 76.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 76.0, end: 83.0, title: "Sostén", action: "hold", scale: 0.6 },
+            { start: 83.0, end: 92.0, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            // Transición pasiva / rodar pelota (sin texto)
-            { start: 95.0, end: 146.0, title: "", action: "static", scale: 1.0 },
+            // Fase pasiva intermedia (rodar pelota / manos) sin texto
+            { start: 92.0, end: 144.0, title: "", action: "static", scale: 1.0 },
 
-            // Cierre final
-            { start: 146.0, end: 152.0, title: "Inhala", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.7 },
-            { start: 152.0, end: 156.0, title: "Sostén", action: "hold", scale: 0.7 },
-            { start: 156.0, end: 165.0, title: "Exhala y Libera", action: "release", scaleStart: 0.7, scaleEnd: 1.0 },
-            { start: 165.0, end: 180.0, title: "", action: "static", scale: 1.0 }
+            // Cierre final del ejercicio
+            { start: 144.0, end: 150.0, title: "Inhala", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.7 },
+            { start: 150.0, end: 154.0, title: "Sostén", action: "hold", scale: 0.7 },
+            { start: 154.0, end: 163.0, title: "Exhala y Libera", action: "release", scaleStart: 0.7, scaleEnd: 1.0 },
+            { start: 163.0, end: 180.0, title: "", action: "static", scale: 1.0 }
         ];
 
         function toggleExercise() {
@@ -306,7 +304,6 @@
                     progressBar.style.width = ((t / currentAudio.duration) * 100) + "%";
                 }
 
-                // Búsqueda directa del bloque activo sin margen de error
                 const step = TIMELINE.find(s => t >= s.start && t < s.end) || TIMELINE[TIMELINE.length - 1];
 
                 instructionText.textContent = step.title;
@@ -320,7 +317,6 @@
                     const elapsed = Math.max(0, Math.min(duration, t - step.start));
                     const progress = elapsed / duration;
                     
-                    // Interpolación matemática directa fotograma a fotograma
                     currentScale = step.scaleStart + (step.scaleEnd - step.scaleStart) * progress;
                 }
 

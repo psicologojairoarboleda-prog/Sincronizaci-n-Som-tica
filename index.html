@@ -6,14 +6,12 @@
     <title>Regulación Somática (SRS)</title>
     <style>
         :root {
-            --bg-color: #f4f7f6;
+            --bg-color: #f2f5f8;
             --card-bg: #ffffff;
-            --primary-color: #3b6e5f;
-            --primary-light: #739e90;
-            --accent-color: #c94a4a;
-            --text-main: #2c3e35;
-            --text-sub: #6c7a73;
-            --ball-glow: rgba(59, 110, 95, 0.2);
+            --primary-color: #3a6073;
+            --accent-color: #d9534f;
+            --text-main: #2c3e50;
+            --text-sub: #7f8c8d;
         }
 
         body {
@@ -36,13 +34,11 @@
             max-width: 400px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
         }
 
         h1 {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             letter-spacing: 0.5px;
             margin-top: 0;
             margin-bottom: 4px;
@@ -54,10 +50,10 @@
             font-size: 0.85rem;
             color: var(--text-sub);
             margin-top: 0;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        /* Caja de instrucción clara */
+        /* Área de Instrucción */
         .instruction-box {
             min-height: 75px;
             display: flex;
@@ -65,7 +61,6 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 15px;
-            padding: 0 10px;
         }
 
         .instruction {
@@ -73,7 +68,6 @@
             font-weight: 700;
             color: var(--primary-color);
             line-height: 1.2;
-            transition: opacity 0.2s ease;
         }
 
         .sub-instruction {
@@ -81,54 +75,34 @@
             color: var(--text-sub);
             margin-top: 6px;
             font-style: italic;
-            transition: opacity 0.2s ease;
         }
 
         /* ÁREA DE LA PELOTA SOMÁTICA */
         .ball-wrapper {
             position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 10px auto 25px auto;
+            width: 220px;
+            height: 220px;
+            margin: 10px auto 20px auto;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .somatic-ball {
-            width: 130px;
-            height: 130px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, #8abcb0, #3b6e5f 70%, #1d3830);
-            box-shadow: 0 10px 25px var(--ball-glow);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
+            background: radial-gradient(circle at 35% 35%, #7ca1b5, #3a6073 70%, #162c38);
+            box-shadow: 0 10px 25px rgba(58, 96, 115, 0.25);
             transform: scale(1);
-            z-index: 2;
-        }
-
-        /* ESTADOS DE LA PELOTA */
-        .ball-wrapper.squeeze .somatic-ball {
-            transform: scale(0.65);
-            filter: brightness(0.9);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-
-        .ball-wrapper.hold .somatic-ball {
-            transform: scale(0.65);
-            filter: brightness(0.95);
-        }
-
-        .ball-wrapper.release .somatic-ball {
-            transform: scale(1.1);
-            filter: brightness(1.05);
-            box-shadow: 0 15px 30px var(--ball-glow);
+            will-change: transform, filter;
         }
 
         /* Barra de progreso de audio */
         .progress-bar-container {
             width: 100%;
             height: 5px;
-            background-color: #e6edea;
+            background-color: #e2e8f0;
             border-radius: 3px;
             margin-bottom: 20px;
             overflow: hidden;
@@ -138,10 +112,9 @@
             height: 100%;
             width: 0%;
             background-color: var(--primary-color);
-            transition: width 0.1s linear;
         }
 
-        /* BOTONES */
+        /* Botones */
         .btn-group {
             display: flex;
             flex-direction: column;
@@ -159,7 +132,7 @@
             cursor: pointer;
             width: 100%;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(59, 110, 95, 0.2);
+            box-shadow: 0 4px 12px rgba(58, 96, 115, 0.2);
         }
 
         .btn:hover {
@@ -168,19 +141,19 @@
 
         .btn-stop {
             background-color: var(--accent-color) !important;
-            box-shadow: 0 4px 12px rgba(201, 74, 74, 0.2) !important;
+            box-shadow: 0 4px 12px rgba(217, 83, 79, 0.2) !important;
         }
 
         .btn-secondary {
             background-color: transparent;
             color: var(--text-sub);
-            border: 1px solid #b8c7c2;
+            border: 1px solid #cbd5e1;
             box-shadow: none;
             display: none;
         }
 
         .btn-secondary:hover {
-            background-color: #edf2f0;
+            background-color: #f8fafc;
             color: var(--text-main);
         }
     </style>
@@ -189,14 +162,14 @@
 
     <div class="container">
         <h1>Regulación Somática</h1>
-        <p class="subtitle">Guía de Práctica SRS</p>
+        <p class="subtitle">Práctica Guiada SRS</p>
 
         <div class="instruction-box">
-            <div class="instruction" id="instructionText">Listo para comenzar</div>
-            <div class="sub-instruction" id="subInstructionText">Presiona iniciar ejercicio</div>
+            <div class="instruction" id="instructionText">Listo para iniciar</div>
+            <div class="sub-instruction" id="subInstructionText">Presiona el botón para comenzar</div>
         </div>
 
-        <div class="ball-wrapper" id="ballWrapper">
+        <div class="ball-wrapper">
             <div class="somatic-ball" id="somaticBall"></div>
         </div>
 
@@ -211,7 +184,6 @@
     </div>
 
     <script>
-        // Archivos de audio desde la carpeta Audios1/
         const bgMusic = new Audio('Audios1/Audio9.mp3');
         bgMusic.loop = true;
         bgMusic.volume = 0.2;
@@ -223,41 +195,47 @@
 
         let isRunning = false;
         let currentAudio = null;
+        let animationFrameId = null;
 
         const instructionText = document.getElementById('instructionText');
         const subInstructionText = document.getElementById('subInstructionText');
-        const ballWrapper = document.getElementById('ballWrapper');
+        const somaticBall = document.getElementById('somaticBall');
         const progressBar = document.getElementById('progressBar');
         const startBtn = document.getElementById('startBtn');
         const skipBtn = document.getElementById('skipBtn');
 
-        // LÍNEA DE TIEMPO AJUSTADA CON MARGEN DE RETARDO EXACTO (Audio 2)
-        // Formato: [SegundoInicio, TítuloPrincipal, Subtítulo, AnimaciónPelota]
+        /*
+          LÍNEA DE TIEMPO EXTRAÍDA DEL AUDIO 2 EXACTO:
+          - tipo: 'static' (fijo), 'squeeze' (apretar gradual), 'hold' (mantener apretado), 'release' (soltar gradual)
+        */
         const TIMELINE = [
-            [0.0,  "Prepárate", "Toma la pelota en tu mano dominante", ""],
-            [4.0,  "Posición Inicial", "Apoya los pies firmes y espalda recta", ""],
-            [7.5,  "Inhala y Aprieta", "Aprieta con fuerza la pelota...", "squeeze"],
-            [11.5, "Sostén", "Retén el aire y siente la tensión", "hold"],
-            [14.5, "Exhala y Libera", "Suelta despacio y abre la mano...", "release"],
-            [19.0, "Inhala y Aprieta", "Vuelve a presionar con fuerza...", "squeeze"],
-            [22.5, "Sostén la tensión", "Antebrazo, hombro y mano...", "hold"],
-            [28.0, "Deposita la ansiedad", "Toda la carga física ahí...", "hold"],
-            [32.0, "Exhala y Libera", "Libera la presión lentamente...", "release"],
-            [36.5, "Inhala y Aprieta", "Nueva presión firme...", "squeeze"],
-            [40.0, "Sostén la presión", "Siente el esfuerzo en tus músculos", "hold"],
-            [43.5, "Exhala y Libera", "Suelta el aire muy despacio...", "release"],
-            [48.0, "Siente la pelota", "Nota cómo recupera su forma...", ""],
-            [52.0, "Inhala profundo", "Llena tus pulmones de aire...", ""],
-            [56.0, "Exhala y relaja", "Mano completamente abierta...", "release"],
-            [61.0, "Siente el contraste", "Calor y circulación en tus dedos", ""],
-            [65.0, "Respiración suave", "La calma se activa en tu cuerpo", ""],
-            [69.0, "Exhala despacio", "Suelta cualquier resto de tensión", "release"],
-            [73.0, "Cambia de mano", "Toma la pelota entre ambas palmas", ""],
-            [77.0, "Rueda la pelota", "Siente su textura y temperatura", ""],
-            [83.0, "El esfuerzo ha terminado", "Tu cuerpo regresa a una zona segura", ""],
-            [89.0, "Inhala suave", "Control y calma establecidos...", "squeeze"],
-            [92.5, "Sostén", "Interioriza la estabilidad", "hold"],
-            [95.5, "Exhala", "Ejercicio completado con éxito", "release"]
+            { start: 0,   end: 5,   title: "Posición Inicial", sub: "Toma la pelota en tu mano dominante", type: "static", scale: 1.0 },
+            { start: 5,   end: 9,   title: "Posición y Postura", sub: "Pies firmes en el suelo, espalda recta", type: "static", scale: 1.0 },
+            { start: 9,   end: 17,  title: "INHALA Y APRIETA", sub: "Aprieta con fuerza la pelota...", type: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 17,  end: 22,  title: "SOSTÉN", sub: "Mantén la presión y retén la respiración", type: "hold", scale: 0.6 },
+            { start: 22,  end: 30,  title: "EXHALA Y LIBERA", sub: "Suelta el aire y abre la mano muy despacio...", type: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            
+            { start: 30,  end: 37,  title: "INHALA Y APRIETA", sub: "Aprieta fuertemente otra vez...", type: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 37,  end: 49,  title: "SOSTÉN LA TENSIÓN", sub: "Siente la tensión en mano, antebrazo y hombro...", type: "hold", scale: 0.6 },
+            { start: 49,  end: 56,  title: "EXHALA Y LIBERA", sub: "Libera la presión y el aire progresivamente...", type: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+
+            { start: 56,  end: 63,  title: "INHALA Y APRIETA", sub: "Tercera repetición: aprieta con fuerza...", type: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 63,  end: 70,  title: "SOSTÉN LA PRESIÓN", sub: "Siente el esfuerzo de tus músculos", type: "hold", scale: 0.6 },
+            { start: 70,  end: 77,  title: "EXHALA Y LIBERA", sub: "Ve soltando la presión muy despacio...", type: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+
+            { start: 77,  end: 87,  title: "Siente la pelota", "sub": "Observa cómo recupera su forma en tu mano", type: "static", scale: 1.0 },
+            { start: 87,  end: 97,  title: "Inhala Profundo", sub: "Llena tus pulmones lentamente...", type: "static", scale: 1.0 },
+            { start: 97,  end: 104, title: "Exhala y Relaja", sub: "Mano completamente abierta...", type: "static", scale: 1.0 },
+            { start: 104, end: 112, title: "Siente el Contraste", sub: "Nota el calor y la circulación en tus dedos", type: "static", scale: 1.0 },
+            { start: 112, end: 120, title: "Respiración Suave", sub: "La respuesta de calma se ha activado", type: "static", scale: 1.0 },
+
+            { start: 120, end: 135, title: "Rueda la Pelota", sub: "Pásala entre tus palmas, siente su textura...", type: "static", scale: 1.0 },
+            { start: 135, end: 148, title: "Descarga Completada", sub: "Tu cuerpo ha regresado a una zona de seguridad", type: "static", scale: 1.0 },
+
+            { start: 148, end: 153, title: "INHALAMOS", sub: "Toma aire una última vez...", type: "squeeze", scaleStart: 1.0, scaleEnd: 0.7 },
+            { start: 153, end: 158, title: "SOSTENEMOS", sub: "Mantén un instante...", type: "hold", scale: 0.7 },
+            { start: 158, end: 168, title: "LIBERAMOS", sub: "Exhala todo el aire y suelta por completo", type: "release", scaleStart: 0.7, scaleEnd: 1.0 },
+            { start: 168, end: 175, title: "Ejercicio Completado", sub: "Control y calma restablecidos en ti", type: "static", scale: 1.0 }
         ];
 
         function toggleExercise() {
@@ -275,10 +253,10 @@
             skipBtn.style.display = 'block';
 
             bgMusic.currentTime = 0;
-            bgMusic.play().catch(e => console.warn("Música de fondo:", e));
+            bgMusic.play().catch(e => console.warn(e));
 
-            // Reproducir Audio 1 (Teoría)
-            playAudioSequence(voiceAudios.intro, "Fundamentación Somática", "Escucha las indicaciones previas...", () => {
+            // Iniciar Audio 1
+            playAudioSequence(voiceAudios.intro, "Fundamentación Somática", "Escucha las indicaciones teoricas...", () => {
                 startPractice();
             });
         }
@@ -288,8 +266,8 @@
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.onended = null;
-                currentAudio.ontimeupdate = null;
             }
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
             startPractice();
         }
 
@@ -300,15 +278,20 @@
             currentAudio.currentTime = 0;
             instructionText.textContent = title;
             subInstructionText.textContent = subtitle;
-            setBallState("");
+            somaticBall.style.transform = "scale(1)";
 
-            currentAudio.play().catch(e => console.warn("Error audio:", e));
+            currentAudio.play().catch(e => console.warn(e));
 
-            currentAudio.ontimeupdate = () => {
+            function updateIntroProgress() {
+                if (!isRunning || currentAudio !== audioObj) return;
                 if (currentAudio.duration) {
                     progressBar.style.width = ((currentAudio.currentTime / currentAudio.duration) * 100) + "%";
                 }
-            };
+                if (!currentAudio.paused && !currentAudio.ended) {
+                    animationFrameId = requestAnimationFrame(updateIntroProgress);
+                }
+            }
+            animationFrameId = requestAnimationFrame(updateIntroProgress);
 
             currentAudio.onended = () => {
                 if (isRunning && onEndedCallback) onEndedCallback();
@@ -320,11 +303,11 @@
             currentAudio = voiceAudios.practice;
             currentAudio.currentTime = 0;
 
-            currentAudio.play().catch(e => console.warn("Error práctica:", e));
+            currentAudio.play().catch(e => console.warn(e));
 
-            // Sincronización estricta por segundo de reproducción
-            currentAudio.ontimeupdate = () => {
-                if (!isRunning) return;
+            // Bucle principal de animación ultra suave sincronizado con el audio
+            function animatePractice() {
+                if (!isRunning || currentAudio !== voiceAudios.practice) return;
 
                 const t = currentAudio.currentTime;
 
@@ -332,39 +315,52 @@
                     progressBar.style.width = ((t / currentAudio.duration) * 100) + "%";
                 }
 
-                // Encontrar exactamente en qué bloque de tiempo estamos
-                let activeStep = TIMELINE[0];
-                for (let i = 0; i < TIMELINE.length; i++) {
-                    if (t >= TIMELINE[i][0]) {
-                        activeStep = TIMELINE[i];
-                    } else {
-                        break;
-                    }
+                // Buscar el paso actual de la línea de tiempo
+                const step = TIMELINE.find(s => t >= s.start && t < s.end) || TIMELINE[TIMELINE.length - 1];
+
+                instructionText.textContent = step.title;
+                subInstructionText.textContent = step.sub;
+
+                // Calcular la escala exacta de la pelota según el tipo de acción
+                let currentScale = 1.0;
+
+                if (step.type === "static") {
+                    currentScale = step.scale;
+                } else if (step.type === "hold") {
+                    // Pequeña pulsación tenue mientras se sostiene
+                    const duration = step.end - step.start;
+                    const elapsed = t - step.start;
+                    const pulse = Math.sin((elapsed / duration) * Math.PI * 4) * 0.02;
+                    currentScale = step.scale + pulse;
+                } else if (step.type === "squeeze" || step.type === "release") {
+                    // Transición GRADUAL y suave entre el inicio y el fin de la frase
+                    const duration = step.end - step.start;
+                    const elapsed = Math.max(0, Math.min(duration, t - step.start));
+                    const progress = elapsed / duration; // Valor de 0.0 a 1.0
+                    
+                    currentScale = step.scaleStart + (step.scaleEnd - step.scaleStart) * progress;
                 }
 
-                // Actualizar pantalla y animación de forma fluida
-                if (instructionText.textContent !== activeStep[1]) {
-                    instructionText.textContent = activeStep[1];
-                    subInstructionText.textContent = activeStep[2];
-                    setBallState(activeStep[3]);
+                // Aplicar la escala a la pelota en tiempo real
+                somaticBall.style.transform = `scale(${currentScale.toFixed(3)})`;
+
+                if (!currentAudio.paused && !currentAudio.ended) {
+                    animationFrameId = requestAnimationFrame(animatePractice);
                 }
+            }
+
+            currentAudio.onplay = () => {
+                animationFrameId = requestAnimationFrame(animatePractice);
             };
 
             currentAudio.onended = () => {
                 if (isRunning) {
                     instructionText.textContent = "Calma Restaurada";
                     subInstructionText.textContent = "Has completado tu sesión somática";
-                    setBallState("");
-                    setTimeout(stopExercise, 3500);
+                    somaticBall.style.transform = "scale(1)";
+                    setTimeout(stopExercise, 3000);
                 }
             };
-        }
-
-        function setBallState(state) {
-            ballWrapper.className = "ball-wrapper";
-            if (state) {
-                ballWrapper.classList.add(state);
-            }
         }
 
         function stopExercise() {
@@ -375,13 +371,14 @@
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
                 currentAudio.onended = null;
-                currentAudio.ontimeupdate = null;
             }
 
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
             progressBar.style.width = "0%";
-            setBallState("");
-            instructionText.textContent = "Listo para comenzar";
-            subInstructionText.textContent = "Presiona iniciar ejercicio";
+            somaticBall.style.transform = "scale(1)";
+            instructionText.textContent = "Listo para iniciar";
+            subInstructionText.textContent = "Presiona el botón para comenzar";
             startBtn.textContent = 'Iniciar Ejercicio';
             startBtn.classList.remove('btn-stop');
             skipBtn.style.display = 'none';

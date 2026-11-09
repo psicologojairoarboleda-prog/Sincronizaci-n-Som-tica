@@ -193,18 +193,20 @@
         const skipBtn = document.getElementById('skipBtn');
 
         /* 
-          LÍNEA DE TIEMPO ESTRICTA: 
-          Cuando `title` es "", la pantalla se queda completamente en blanco y la pelota descansa en escala 1.0.
+          LÍNEA DE TIEMPO RECALIBRADA (Segundos absolutos de Audio2.mp3)
+          - Cuando el título es "", la pantalla está limpia y la pelota descansa quieta.
+          - Las acciones de compresión (squeeze), retención (hold) y expansión (release) ocurren 
+            únicamente en el tramo exacto donde la voz emite la orden.
         */
         const TIMELINE = [
-            { start: 0.0,  end: 14.0, title: "", action: "static", scale: 1.0 },
+            { start: 0.0,  end: 14.2, title: "", action: "static", scale: 1.0 },
             
             // Ciclo 1
-            { start: 14.0, end: 21.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 14.2, end: 21.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
             { start: 21.0, end: 24.0, title: "Sostén", action: "hold", scale: 0.6 },
             { start: 24.0, end: 32.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            // Pausa intermedia sin texto
+            // Transición sin texto
             { start: 32.5, end: 39.5, title: "", action: "static", scale: 1.0 },
 
             // Ciclo 2
@@ -212,7 +214,7 @@
             { start: 46.5, end: 56.5, title: "Sostén", action: "hold", scale: 0.6 },
             { start: 56.5, end: 65.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            // Pausa intermedia sin texto
+            // Transición sin texto
             { start: 65.5, end: 72.0, title: "", action: "static", scale: 1.0 },
 
             // Ciclo 3
@@ -220,7 +222,7 @@
             { start: 79.0, end: 86.0, title: "Sostén", action: "hold", scale: 0.6 },
             { start: 86.0, end: 95.0, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            // Transición y descanso pasivo / rodar pelota (sin texto en pantalla)
+            // Transición pasiva / rodar pelota (sin texto)
             { start: 95.0, end: 146.0, title: "", action: "static", scale: 1.0 },
 
             // Cierre final
@@ -274,7 +276,7 @@
 
             function updateProgress() {
                 if (!isRunning || currentAudio !== audioObj) return;
-                if (currentAudio.duration) {
+                if (currentAudio.duration && currentAudio.duration > 0) {
                     progressBar.style.width = ((currentAudio.currentTime / currentAudio.duration) * 100) + "%";
                 }
                 if (!currentAudio.paused && !currentAudio.ended) {
@@ -300,10 +302,11 @@
 
                 const t = currentAudio.currentTime;
 
-                if (currentAudio.duration) {
+                if (currentAudio.duration && currentAudio.duration > 0) {
                     progressBar.style.width = ((t / currentAudio.duration) * 100) + "%";
                 }
 
+                // Búsqueda directa del bloque activo sin margen de error
                 const step = TIMELINE.find(s => t >= s.start && t < s.end) || TIMELINE[TIMELINE.length - 1];
 
                 instructionText.textContent = step.title;
@@ -317,6 +320,7 @@
                     const elapsed = Math.max(0, Math.min(duration, t - step.start));
                     const progress = elapsed / duration;
                     
+                    // Interpolación matemática directa fotograma a fotograma
                     currentScale = step.scaleStart + (step.scaleEnd - step.scaleStart) * progress;
                 }
 

@@ -70,7 +70,8 @@
             letter-spacing: 0.5px;
         }
 
-        .ball-wrapper {
+        /* Contenedor central adaptable */
+        .visual-wrapper {
             position: relative;
             width: 220px;
             height: 220px;
@@ -80,7 +81,9 @@
             align-items: center;
         }
 
+        /* Pelota Somática (Activa durante el ejercicio) */
         .somatic-ball {
+            position: absolute;
             width: 150px;
             height: 150px;
             border-radius: 50%;
@@ -88,7 +91,52 @@
             box-shadow: 0 10px 25px rgba(58, 96, 115, 0.25);
             transform: scale(1);
             will-change: transform;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
+
+        /* Ondas Relajantes (Activas en intro y cierre) */
+        .waves-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .wave {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(58, 96, 115, 0.3);
+            animation: ripple 3s infinite linear;
+        }
+
+        .wave:nth-child(2) {
+            animation-delay: 1.5s;
+        }
+
+        @keyframes ripple {
+            0% {
+                width: 60px;
+                height: 60px;
+                opacity: 0.8;
+            }
+            100% {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+            }
+        }
+
+        /* Clases de estado visual */
+        .mode-waves .waves-container { opacity: 1; }
+        .mode-waves .somatic-ball { opacity: 0; pointer-events: none; }
+
+        .mode-ball .waves-container { opacity: 0; pointer-events: none; }
+        .mode-ball .somatic-ball { opacity: 1; }
 
         .progress-bar-container {
             width: 100%;
@@ -158,7 +206,11 @@
             <div class="instruction" id="instructionText"></div>
         </div>
 
-        <div class="ball-wrapper">
+        <div class="visual-wrapper mode-waves" id=" visualWrapper">
+            <div class="waves-container">
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </div>
             <div class="somatic-ball" id="somaticBall"></div>
         </div>
 
@@ -187,40 +239,41 @@
         let animationFrameId = null;
 
         const instructionText = document.getElementById('instructionText');
+        const visualWrapper = document.getElementById('visualWrapper');
         const somaticBall = document.getElementById('somaticBall');
         const progressBar = document.getElementById('progressBar');
         const startBtn = document.getElementById('startBtn');
         const skipBtn = document.getElementById('skipBtn');
 
         /* 
-          LÍNEA DE TIEMPO ESTRICTA Y CALIBRADA CON EL AUDIO 2:
-          - Pantalla limpia y pelota quieta durante las introducciones habladas.
-          - Sincronización exacta segundo a segundo con cada orden principal de inhalación, sostén y exhalación.
+          LÍNEA DE TIEMPO ESTRICTA Y CALIBRADA CON EL ANÁLISIS DEL AUDIO 2:
+          - visual: "waves" (ondas relajantes activas, sin pelota ni texto durante la intro/cierre) o "ball" (pelota y órdenes activas).
         */
         const TIMELINE = [
-            { start: 0.0,  end: 13.0, title: "", action: "static", scale: 1.0 }, // Intro inicial ("Toma la pelota...")
-            { start: 13.0, end: 20.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 }, // 1er Ciclo: Inhalación
-            { start: 20.0, end: 22.5, title: "Sostén", action: "hold", scale: 0.6 }, // 1er Ciclo: Sostén
-            { start: 22.5, end: 29.0, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 }, // 1er Ciclo: Exhalación
+            // 0s a 13s: Introducción hablada pura ("Toma la pelota...", posturas, atención) -> Ondas relajantes sin texto
+            { start: 0.0,  end: 13.0, title: "", visual: "waves", action: "static", scale: 1.0 },
+            
+            // 1er Ciclo de Presión
+            { start: 13.0, end: 20.0, title: "Inhala y Aprieta", visual: "ball", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 20.0, end: 22.5, title: "Sostén", visual: "ball", action: "hold", scale: 0.6 },
+            { start: 22.5, end: 29.0, title: "Exhala y Libera", visual: "ball", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            { start: 29.0, end: 32.5, title: "", action: "static", scale: 1.0 }, // Transición
+            { start: 29.0, end: 32.5, title: "", visual: "ball", action: "static", scale: 1.0 },
 
-            { start: 32.5, end: 39.5, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 }, // 2do Ciclo: Inhalación
-            { start: 39.5, end: 49.0, title: "Sostén", action: "hold", scale: 0.6 }, // 2do Ciclo: Sostén prolongado (antebrazo, hombro)
-            { start: 49.0, end: 56.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 }, // 2do Ciclo: Exhalación
+            // 2do Ciclo de Presión (con retención larga de hombros y antebrazo)
+            { start: 32.5, end: 39.5, title: "Inhala y Aprieta", visual: "ball", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 39.5, end: 49.0, title: "Sostén", visual: "ball", action: "hold", scale: 0.6 },
+            { start: 49.0, end: 56.5, title: "Exhala y Libera", visual: "ball", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            { start: 56.5, end: 59.5, title: "", action: "static", scale: 1.0 }, // Transición
+            { start: 56.5, end: 59.5, title: "", visual: "ball", action: "static", scale: 1.0 },
 
-            { start: 59.5, end: 66.5, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 }, // 3er Ciclo: "Vuelves a apretar..."
-            { start: 66.5, end: 71.0, title: "Sostén", action: "hold", scale: 0.6 }, // 3er Ciclo: Sostén
-            { start: 71.0, end: 78.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 }, // 3er Ciclo: Exhalación
+            // 3er Ciclo de Presión ("Vuelves a apretar...")
+            { start: 59.5, end: 66.5, title: "Inhala y Aprieta", visual: "ball", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 66.5, end: 71.0, title: "Sostén", visual: "ball", action: "hold", scale: 0.6 },
+            { start: 71.0, end: 78.5, title: "Exhala y Libera", visual: "ball", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            { start: 78.5, end: 129.0, title: "", action: "static", scale: 1.0 }, // Fase pasiva (Rodar pelota, temperatura, manos)
-
-            { start: 129.0, end: 135.0, title: "Inhala", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.7 }, // Cierre: Inhalar
-            { start: 135.0, end: 139.0, title: "Sostén", action: "hold", scale: 0.7 }, // Cierre: Sostener
-            { start: 139.0, end: 147.0, title: "Exhala y Libera", action: "release", scaleStart: 0.7, scaleEnd: 1.0 }, // Cierre: Exhalar
-            { start: 147.0, end: 180.0, title: "", action: "static", scale: 1.0 } // Calma completa final
+            // 78.5s en adelante: Fase pasiva, sensaciones corporales, calor, rodar pelota entre palmas y cierre de voz conversacional -> Ondas relajantes sin pelota ni texto forzado
+            { start: 78.5, end: 180.0, title: "", visual: "waves", action: "static", scale: 1.0 }
         ];
 
         function toggleExercise() {
@@ -261,6 +314,7 @@
             currentAudio = audioObj;
             currentAudio.currentTime = 0;
             instructionText.textContent = title;
+            visualWrapper.className = "visual-wrapper mode-waves";
             somaticBall.style.transform = "scale(1)";
 
             currentAudio.play().catch(e => console.warn(e));
@@ -301,6 +355,13 @@
 
                 instructionText.textContent = step.title;
 
+                // Controlar si se muestran ondas relajantes o la pelota somática activa
+                if (step.visual === "waves") {
+                    visualWrapper.className = "visual-wrapper mode-waves";
+                } else {
+                    visualWrapper.className = "visual-wrapper mode-ball";
+                }
+
                 let currentScale = 1.0;
 
                 if (step.action === "static" || step.action === "hold") {
@@ -327,6 +388,7 @@
             currentAudio.onended = () => {
                 if (isRunning) {
                     instructionText.textContent = "";
+                    visualWrapper.className = "visual-wrapper mode-waves";
                     somaticBall.style.transform = "scale(1)";
                     setTimeout(stopExercise, 2000);
                 }
@@ -346,6 +408,7 @@
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
             progressBar.style.width = "0%";
+            visualWrapper.className = "visual-wrapper mode-waves";
             somaticBall.style.transform = "scale(1)";
             instructionText.textContent = "";
             startBtn.textContent = 'Iniciar Ejercicio';

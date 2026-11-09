@@ -73,7 +73,7 @@
         /* Contenedor visual central */
         .visual-wrapper {
             position: relative;
-            width: 220px;
+            width: 240px;
             height: 220px;
             margin: 15px auto 25px auto;
             display: flex;
@@ -81,7 +81,7 @@
             align-items: center;
         }
 
-        /* 1. PELOTA SOMÁTICA (Visible únicamente durante los ejercicios activos con pelota) */
+        /* 1. PELOTA SOMÁTICA (Transición suave y fundida) */
         .somatic-ball {
             position: absolute;
             width: 150px;
@@ -90,51 +90,57 @@
             background: radial-gradient(circle at 35% 35%, #7ca1b5, #3a6073 70%, #162c38);
             box-shadow: 0 10px 25px rgba(58, 96, 115, 0.3);
             transform: scale(1);
-            will-change: transform;
+            will-change: transform, opacity;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.1s linear;
         }
 
-        /* 2. ONDITAS RELAJANTES (Visibles en intro y cierre de sensaciones) */
+        /* 2. ONDAS HORIZONTALES RELAJANTES (Líneas fluidas y calmantes) */
         .waves-container {
             position: absolute;
             width: 100%;
             height: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            gap: 16px;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .relax-wave {
-            position: absolute;
-            border-radius: 50%;
-            border: 2px solid rgba(58, 96, 115, 0.35);
-            background: rgba(58, 96, 115, 0.04);
-            animation: expandWave 3.5s infinite ease-out;
+        .horizontal-wave {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(58, 96, 115, 0.35), transparent);
+            border-radius: 4px;
+            animation: flowHorizontal 3s infinite ease-in-out;
         }
 
-        .relax-wave:nth-child(2) {
-            animation-delay: 1.75s;
+        .horizontal-wave:nth-child(2) {
+            width: 75%;
+            animation-delay: 0.5s;
+            opacity: 0.7;
         }
 
-        @keyframes expandWave {
-            0% {
-                width: 50px;
-                height: 50px;
-                opacity: 0.9;
-                transform: scale(1);
+        .horizontal-wave:nth-child(3) {
+            width: 50%;
+            animation-delay: 1s;
+            opacity: 0.4;
+        }
+
+        @keyframes flowHorizontal {
+            0%, 100% {
+                transform: scaleX(0.7);
+                opacity: 0.2;
             }
-            100% {
-                width: 210px;
-                height: 210px;
-                opacity: 0;
-                transform: scale(1.05);
+            50% {
+                transform: scaleX(1.1);
+                opacity: 0.8;
             }
         }
 
-        /* Modos de visualización manejados por clases limpias */
+        /* Modos de visualización con fundido suave cruzado */
         .mode-waves .waves-container { opacity: 1; pointer-events: auto; }
         .mode-waves .somatic-ball { opacity: 0; pointer-events: none; }
 
@@ -209,11 +215,12 @@
             <div class="instruction" id="instructionText"></div>
         </div>
 
-        <!-- Contenedor dinámico que alterna entre ondas y pelota según el momento exacto del audio -->
+        <!-- Contenedor con transición suave entre ondas horizontales y pelota -->
         <div class="visual-wrapper mode-waves" id="visualWrapper">
             <div class="waves-container">
-                <div class="relax-wave"></div>
-                <div class="relax-wave"></div>
+                <div class="horizontal-wave"></div>
+                <div class="horizontal-wave"></div>
+                <div class="horizontal-wave"></div>
             </div>
             <div class="somatic-ball" id="somaticBall"></div>
         </div>
@@ -250,12 +257,12 @@
         const skipBtn = document.getElementById('skipBtn');
 
         /* 
-          LÍNEA DE TIEMPO ESTRICTA Y PERFECTAMENTE DIFERENCIADA:
-          - visual: "waves" -> Ondas relajantes activas (intro teórica y cierre de sensaciones corporales).
-          - visual: "ball"  -> Pelota somática activa y visible con sus interacciones de compresión/sostén/liberación.
+          LÍNEA DE TIEMPO ESTRICTA Y CALIBRADA:
+          - visual: "waves" -> Ondas horizontales calmantes (intro teórica y cierre de sensaciones).
+          - visual: "ball"  -> Pelota somática activa durante los ciclos de presión.
         */
         const TIMELINE = [
-            // 00:00 - 00:13: Introducción hablada pura (Posturas, atención inicial) -> ONDITAS RELAJANTES
+            // 00:00 - 00:13: Introducción hablada pura -> ONDAS HORIZONTALES CALMANTES
             { start: 0.0,  end: 13.0, title: "", visual: "waves", action: "static", scale: 1.0 },
             
             // 1er Ciclo con Pelota
@@ -265,7 +272,7 @@
 
             { start: 29.0, end: 32.5, title: "", visual: "ball", action: "static", scale: 1.0 },
 
-            // 2do Ciclo con Pelota (Retención prolongada de hombro, antebrazo y mano)
+            // 2do Ciclo con Pelota (Retención prolongada)
             { start: 32.5, end: 39.5, title: "Inhala y Aprieta", visual: "ball", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
             { start: 39.5, end: 49.0, title: "Sostén", visual: "ball", action: "hold", scale: 0.6 },
             { start: 49.0, end: 56.5, title: "Exhala y Libera", visual: "ball", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
@@ -277,7 +284,7 @@
             { start: 66.5, end: 71.0, title: "Sostén", visual: "ball", action: "hold", scale: 0.6 },
             { start: 71.0, end: 78.5, title: "Exhala y Libera", visual: "ball", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            // 01:18 (78.5s) en adelante: Fase pasiva, calor, circulación, rodar la pelota entre palmas y cierre conversacional de sensaciones -> ONDITAS RELAJANTES
+            // 01:18 (78.5s) en adelante: Fase pasiva, calor, circulación, rodar pelota y cierre conversacional de sensaciones -> ONDAS HORIZONTALES CALMANTES
             { start: 78.5, end: 180.0, title: "", visual: "waves", action: "static", scale: 1.0 }
         ];
 
@@ -360,7 +367,7 @@
 
                 instructionText.textContent = step.title;
 
-                // Alternar visualmente entre ondas relajantes y pelota somática
+                // Transición suave manejada por clases con fundido cruzado
                 if (step.visual === "waves") {
                     visualWrapper.className = "visual-wrapper mode-waves";
                 } else {

@@ -95,7 +95,7 @@
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.1s linear;
         }
 
-        /* 2. ONDAS HORIZONTALES RELAJANTES (Líneas fluidas y calmantes) */
+        /* 2. ONDAS HORIZONTALES ESTÉTICAS Y RELAJANTES (Diseño limpio y con resplandor) */
         .waves-container {
             position: absolute;
             width: 100%;
@@ -104,39 +104,43 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
             opacity: 0;
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .horizontal-wave {
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, rgba(58, 96, 115, 0.35), transparent);
-            border-radius: 4px;
-            animation: flowHorizontal 3s infinite ease-in-out;
+            width: 85%;
+            height: 5px;
+            background: linear-gradient(90deg, rgba(58, 96, 115, 0.05), rgba(58, 96, 115, 0.6), rgba(58, 96, 115, 0.05));
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(58, 96, 115, 0.2);
+            animation: breatheWave 4s infinite ease-in-out;
+        }
+
+        .horizontal-wave:nth-child(1) {
+            width: 60%;
+            animation-delay: 0s;
         }
 
         .horizontal-wave:nth-child(2) {
-            width: 75%;
-            animation-delay: 0.5s;
-            opacity: 0.7;
+            width: 90%;
+            animation-delay: 0.6s;
         }
 
         .horizontal-wave:nth-child(3) {
-            width: 50%;
-            animation-delay: 1s;
-            opacity: 0.4;
+            width: 75%;
+            animation-delay: 1.2s;
         }
 
-        @keyframes flowHorizontal {
+        @keyframes breatheWave {
             0%, 100% {
-                transform: scaleX(0.7);
-                opacity: 0.2;
+                transform: scaleX(0.75);
+                opacity: 0.3;
             }
             50% {
-                transform: scaleX(1.1);
-                opacity: 0.8;
+                transform: scaleX(1.15);
+                opacity: 0.9;
             }
         }
 
@@ -215,7 +219,7 @@
             <div class="instruction" id="instructionText"></div>
         </div>
 
-        <!-- Contenedor con transición suave entre ondas horizontales y pelota -->
+        <!-- Contenedor con transición suave entre ondas horizontales estéticas y pelota -->
         <div class="visual-wrapper mode-waves" id="visualWrapper">
             <div class="waves-container">
                 <div class="horizontal-wave"></div>
@@ -258,11 +262,11 @@
 
         /* 
           LÍNEA DE TIEMPO ESTRICTA Y CALIBRADA:
-          - visual: "waves" -> Ondas horizontales calmantes (intro teórica y cierre de sensaciones).
+          - visual: "waves" -> Ondas horizontales sofisticadas (intro teórica y cierre de sensaciones).
           - visual: "ball"  -> Pelota somática activa durante los ciclos de presión.
         */
         const TIMELINE = [
-            // 00:00 - 00:13: Introducción hablada pura -> ONDAS HORIZONTALES CALMANTES
+            // 00:00 - 00:13: Introducción hablada pura -> ONDAS HORIZONTALES ESTÉTICAS
             { start: 0.0,  end: 13.0, title: "", visual: "waves", action: "static", scale: 1.0 },
             
             // 1er Ciclo con Pelota
@@ -284,7 +288,7 @@
             { start: 66.5, end: 71.0, title: "Sostén", visual: "ball", action: "hold", scale: 0.6 },
             { start: 71.0, end: 78.5, title: "Exhala y Libera", visual: "ball", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            // 01:18 (78.5s) en adelante: Fase pasiva, calor, circulación, rodar pelota y cierre conversacional de sensaciones -> ONDAS HORIZONTALES CALMANTES
+            // 01:18 (78.5s) en adelante: Fase pasiva, calor, circulación, rodar pelota y cierre conversacional de sensaciones -> ONDAS HORIZONTALES ESTÉTICAS
             { start: 78.5, end: 180.0, title: "", visual: "waves", action: "static", scale: 1.0 }
         ];
 
@@ -302,7 +306,8 @@
             startBtn.classList.add('btn-stop');
             skipBtn.style.display = 'block';
 
-            bgMusic.currentTime = 0;
+            // Inicia la música omitiendo los primeros 10 segundos de silencio
+            bgMusic.currentTime = 10;
             bgMusic.play().catch(e => console.warn(e));
 
             playAudioSequence(voiceAudios.intro, "", () => {

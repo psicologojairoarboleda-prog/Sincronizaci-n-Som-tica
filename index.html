@@ -54,16 +54,15 @@
         }
 
         .instruction-box {
-            min-height: 60px;
+            min-height: 50px;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             margin-bottom: 15px;
         }
 
         .instruction {
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             font-weight: 700;
             color: var(--primary-color);
             line-height: 1.2;
@@ -156,7 +155,7 @@
         <p class="subtitle">Práctica Guiada SRS</p>
 
         <div class="instruction-box">
-            <div class="instruction" id="instructionText">Listo para iniciar</div>
+            <div class="instruction" id="instructionText"></div>
         </div>
 
         <div class="ball-wrapper">
@@ -194,35 +193,41 @@
         const skipBtn = document.getElementById('skipBtn');
 
         /* 
-          LÍNEA DE TIEMPO ESTRICTA (AUDIO 2)
-          Calibrada de forma directa con las locuciones exactas de inhalación, sostén y exhalación.
+          LÍNEA DE TIEMPO ESTRICTA: 
+          Cuando `title` es "", la pantalla se queda completamente en blanco y la pelota descansa en escala 1.0.
         */
         const TIMELINE = [
-            { start: 0.0,  end: 9.5,   title: "Prepárate", action: "static", scale: 1.0 },
+            { start: 0.0,  end: 14.0, title: "", action: "static", scale: 1.0 },
             
             // Ciclo 1
-            { start: 9.5,  end: 16.5,  title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 16.5, end: 19.5,  title: "Sostén", action: "hold", scale: 0.6 },
-            { start: 19.5, end: 28.0,  title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            { start: 14.0, end: 21.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 21.0, end: 24.0, title: "Sostén", action: "hold", scale: 0.6 },
+            { start: 24.0, end: 32.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+
+            // Pausa intermedia sin texto
+            { start: 32.5, end: 39.5, title: "", action: "static", scale: 1.0 },
 
             // Ciclo 2
-            { start: 28.0, end: 35.0,  title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 35.0, end: 45.0,  title: "Sostén", action: "hold", scale: 0.6 },
-            { start: 45.0, end: 54.0,  title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            { start: 39.5, end: 46.5, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 46.5, end: 56.5, title: "Sostén", action: "hold", scale: 0.6 },
+            { start: 56.5, end: 65.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+
+            // Pausa intermedia sin texto
+            { start: 65.5, end: 72.0, title: "", action: "static", scale: 1.0 },
 
             // Ciclo 3
-            { start: 54.0, end: 61.0,  title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 61.0, end: 68.0,  title: "Sostén", action: "hold", scale: 0.6 },
-            { start: 68.0, end: 77.0,  title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            { start: 72.0, end: 79.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
+            { start: 79.0, end: 86.0, title: "Sostén", action: "hold", scale: 0.6 },
+            { start: 86.0, end: 95.0, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
 
-            // Transición y descanso pasivo
-            { start: 77.0, end: 128.0, title: "Respiración Suave", action: "static", scale: 1.0 },
+            // Transición y descanso pasivo / rodar pelota (sin texto en pantalla)
+            { start: 95.0, end: 146.0, title: "", action: "static", scale: 1.0 },
 
             // Cierre final
-            { start: 128.0, end: 134.0, title: "Inhala", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.7 },
-            { start: 134.0, end: 138.0, title: "Sostén", action: "hold", scale: 0.7 },
-            { start: 138.0, end: 147.0, title: "Exhala y Libera", action: "release", scaleStart: 0.7, scaleEnd: 1.0 },
-            { start: 147.0, end: 160.0, title: "Calma Completada", action: "static", scale: 1.0 }
+            { start: 146.0, end: 152.0, title: "Inhala", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.7 },
+            { start: 152.0, end: 156.0, title: "Sostén", action: "hold", scale: 0.7 },
+            { start: 156.0, end: 165.0, title: "Exhala y Libera", action: "release", scaleStart: 0.7, scaleEnd: 1.0 },
+            { start: 165.0, end: 180.0, title: "", action: "static", scale: 1.0 }
         ];
 
         function toggleExercise() {
@@ -242,7 +247,7 @@
             bgMusic.currentTime = 0;
             bgMusic.play().catch(e => console.warn(e));
 
-            playAudioSequence(voiceAudios.intro, "Explicación Teórica", () => {
+            playAudioSequence(voiceAudios.intro, "", () => {
                 startPractice();
             });
         }
@@ -299,7 +304,6 @@
                     progressBar.style.width = ((t / currentAudio.duration) * 100) + "%";
                 }
 
-                // Identificar el segmento exacto según el segundo transcurrido
                 const step = TIMELINE.find(s => t >= s.start && t < s.end) || TIMELINE[TIMELINE.length - 1];
 
                 instructionText.textContent = step.title;
@@ -309,7 +313,6 @@
                 if (step.action === "static" || step.action === "hold") {
                     currentScale = step.scale;
                 } else if (step.action === "squeeze" || step.action === "release") {
-                    // Interpolación lineal de precisión para garantizar una compresión/expansión gradual sin saltos
                     const duration = step.end - step.start;
                     const elapsed = Math.max(0, Math.min(duration, t - step.start));
                     const progress = elapsed / duration;
@@ -330,9 +333,9 @@
 
             currentAudio.onended = () => {
                 if (isRunning) {
-                    instructionText.textContent = "Calma Restaurada";
+                    instructionText.textContent = "";
                     somaticBall.style.transform = "scale(1)";
-                    setTimeout(stopExercise, 3000);
+                    setTimeout(stopExercise, 2000);
                 }
             };
         }
@@ -351,7 +354,7 @@
 
             progressBar.style.width = "0%";
             somaticBall.style.transform = "scale(1)";
-            instructionText.textContent = "Listo para iniciar";
+            instructionText.textContent = "";
             startBtn.textContent = 'Iniciar Ejercicio';
             startBtn.classList.remove('btn-stop');
             skipBtn.style.display = 'none';

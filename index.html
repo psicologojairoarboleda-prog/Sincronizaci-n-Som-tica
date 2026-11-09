@@ -193,42 +193,34 @@
         const skipBtn = document.getElementById('skipBtn');
 
         /* 
-          LÍNEA DE TIEMPO REAJUSTADA (SE CORRIGIÓ EL ADELANTO):
-          - Se desplazaron los tiempos hacia adelante para dar espacio completo a la locución 
-            inicial y asegurar que el texto y la pelota reaccionen exactamente al compás de la voz.
+          LÍNEA DE TIEMPO ESTRICTA Y CALIBRADA CON EL AUDIO 2:
+          - Pantalla limpia y pelota quieta durante las introducciones habladas.
+          - Sincronización exacta segundo a segundo con cada orden principal de inhalación, sostén y exhalación.
         */
         const TIMELINE = [
-            { start: 0.0,  end: 16.5, title: "", action: "static", scale: 1.0 },
-            
-            // Ciclo 1
-            { start: 16.5, end: 23.5, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 23.5, end: 26.5, title: "Sostén", action: "hold", scale: 0.6 },
-            { start: 26.5, end: 33.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            { start: 0.0,  end: 13.0, title: "", action: "static", scale: 1.0 }, // Intro inicial ("Toma la pelota...")
+            { start: 13.0, end: 20.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 }, // 1er Ciclo: Inhalación
+            { start: 20.0, end: 22.5, title: "Sostén", action: "hold", scale: 0.6 }, // 1er Ciclo: Sostén
+            { start: 22.5, end: 29.0, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 }, // 1er Ciclo: Exhalación
 
-            // Transición intermedia sin texto
-            { start: 33.5, end: 35.0, title: "", action: "static", scale: 1.0 },
+            { start: 29.0, end: 32.5, title: "", action: "static", scale: 1.0 }, // Transición
 
-            // Ciclo 2 (Con su respectivo sostenido largo de tensión)
-            { start: 35.0, end: 42.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 42.0, end: 52.0, title: "Sostén", action: "hold", scale: 0.6 },
-            { start: 52.0, end: 60.0, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            { start: 32.5, end: 39.5, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 }, // 2do Ciclo: Inhalación
+            { start: 39.5, end: 49.0, title: "Sostén", action: "hold", scale: 0.6 }, // 2do Ciclo: Sostén prolongado (antebrazo, hombro)
+            { start: 49.0, end: 56.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 }, // 2do Ciclo: Exhalación
 
-            // Transición intermedia sin texto
-            { start: 60.0, end: 63.0, title: "", action: "static", scale: 1.0 },
+            { start: 56.5, end: 59.5, title: "", action: "static", scale: 1.0 }, // Transición
 
-            // Ciclo 3 ("Vuelves a apretar profundamente y respiras")
-            { start: 63.0, end: 70.0, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 },
-            { start: 70.0, end: 74.0, title: "Sostén", action: "hold", scale: 0.6 },
-            { start: 74.0, end: 82.0, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 },
+            { start: 59.5, end: 66.5, title: "Inhala y Aprieta", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.6 }, // 3er Ciclo: "Vuelves a apretar..."
+            { start: 66.5, end: 71.0, title: "Sostén", action: "hold", scale: 0.6 }, // 3er Ciclo: Sostén
+            { start: 71.0, end: 78.5, title: "Exhala y Libera", action: "release", scaleStart: 0.6, scaleEnd: 1.0 }, // 3er Ciclo: Exhalación
 
-            // Fase pasiva y rodar la pelota (sin texto)
-            { start: 82.0, end: 135.0, title: "", action: "static", scale: 1.0 },
+            { start: 78.5, end: 129.0, title: "", action: "static", scale: 1.0 }, // Fase pasiva (Rodar pelota, temperatura, manos)
 
-            // Cierre final del ejercicio
-            { start: 135.0, end: 141.0, title: "Inhala", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.7 },
-            { start: 141.0, end: 145.0, title: "Sostén", action: "hold", scale: 0.7 },
-            { start: 145.0, end: 153.0, title: "Exhala y Libera", action: "release", scaleStart: 0.7, scaleEnd: 1.0 },
-            { start: 153.0, end: 180.0, title: "", action: "static", scale: 1.0 }
+            { start: 129.0, end: 135.0, title: "Inhala", action: "squeeze", scaleStart: 1.0, scaleEnd: 0.7 }, // Cierre: Inhalar
+            { start: 135.0, end: 139.0, title: "Sostén", action: "hold", scale: 0.7 }, // Cierre: Sostener
+            { start: 139.0, end: 147.0, title: "Exhala y Libera", action: "release", scaleStart: 0.7, scaleEnd: 1.0 }, // Cierre: Exhalar
+            { start: 147.0, end: 180.0, title: "", action: "static", scale: 1.0 } // Calma completa final
         ];
 
         function toggleExercise() {

@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sincronización Somática - SRS</title>
-    <!-- Tailwind CSS para diseño y utilidades -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Sincronización de Regulación Somática (SRS)</title>
     <style>
         :root {
-            --bg-color: #f4f0ea;
+            --bg-color: #eef2f5;
             --card-bg: #ffffff;
-            --primary-color: #7b6ba8;
-            --primary-dark: #5c4d8a;
-            --text-color: #2c2c2c;
-            --accent-color: #9d8ec4;
+            --primary-color: #4a6fa5;
+            --primary-dark: #3b5984;
+            --accent-color: #e63946;
+            --text-color: #2b2d42;
+            --subtext-color: #6c757d;
+            --ball-glow: rgba(74, 111, 165, 0.3);
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             display: flex;
@@ -31,202 +31,185 @@
 
         .container {
             background-color: var(--card-bg);
-            border-radius: 24px;
-            padding: 32px 24px;
-            max-width: 400px;
+            border-radius: 28px;
+            padding: 35px 30px;
+            max-width: 420px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
         }
 
         h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            color: var(--primary-color);
+            font-size: 1.35rem;
             letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            color: var(--primary-color);
+            text-transform: uppercase;
         }
 
         p.subtitle {
             font-size: 0.9rem;
-            color: #666666;
+            color: var(--subtext-color);
             margin-top: 0;
-            margin-bottom: 15px;
-            line-height: 1.4;
+            margin-bottom: 25px;
         }
 
-        /* Texto de instrucción sobre el contenedor */
         .instruction {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            min-height: 32px;
+            color: var(--primary-dark);
+            min-height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
-        /* Contenedor del Cuadrado Visual */
-        .box-container {
+        .sub-instruction {
+            font-size: 0.95rem;
+            color: var(--subtext-color);
+            min-height: 24px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* ÁREA DE LA PELOTA SOMÁTICA */
+        .ball-wrapper {
             position: relative;
             width: 220px;
             height: 220px;
-            margin: 10px auto 20px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            border-radius: 20px;
-        }
-
-        .box-svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 220px;
-            height: 220px;
-            transform: rotate(-90deg);
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .box-bg {
-            fill: none;
-            stroke: #eeeeee;
-            stroke-width: 8;
-            stroke-linecap: round;
-        }
-
-        .box-progress {
-            fill: none;
-            stroke: var(--primary-color);
-            stroke-width: 8;
-            stroke-linecap: round;
-            stroke-dasharray: 760;
-            stroke-dashoffset: 760;
-            transition: stroke 0.4s ease;
-        }
-
-        /* Representación interactiva de la Pelota Antiestrés en el centro */
-        .center-graphic-wrapper {
-            position: absolute;
-            width: 160px;
-            height: 160px;
-            z-index: 1;
+            margin: 10px auto 25px auto;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .stress-ball {
-            width: 100%;
-            height: 100%;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        .somatic-ball {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #7aa2d4, #4a6fa5 70%, #2c4468);
+            box-shadow: 0 10px 25px var(--ball-glow);
+            transition: transform 0.4s ease-out, filter 0.4s ease-out, box-shadow 0.4s ease-out;
+            transform: scale(1);
         }
 
-        .timer-info {
-            font-size: 0.9rem;
-            color: #777777;
-            margin-bottom: 20px;
-            font-weight: 500;
+        /* ESTADOS ANIMADOS DE LA PELOTA */
+        .somatic-ball.squeeze {
+            transform: scale(0.72);
+            filter: brightness(0.85);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .somatic-ball.hold {
+            transform: scale(0.72);
+            filter: brightness(0.9);
+            animation: pulse-hold 1.5s infinite alternate;
+        }
+
+        .somatic-ball.release {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+            box-shadow: 0 15px 35px var(--ball-glow);
+        }
+
+        @keyframes pulse-hold {
+            0% { transform: scale(0.72); }
+            100% { transform: scale(0.75); }
         }
 
         .btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 14px 28px;
+            padding: 15px 28px;
             border-radius: 30px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
             transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-top: 8px;
-            box-shadow: 0 4px 12px rgba(123, 107, 168, 0.2);
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(74, 111, 165, 0.2);
         }
 
         .btn:active {
             transform: scale(0.98);
         }
 
+        .btn-stop {
+            background-color: var(--accent-color) !important;
+        }
+
         .btn-skip {
-            background-color: #a0a0a0;
+            background-color: #8d99ae;
             display: none;
-            box-shadow: none;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>REGULACIÓN SOMÁTICA (SRS)</h1>
-        <p class="subtitle">Técnica con Pelota Antiestrés</p>
+        <h1>REGULACIÓN SOMÁTICA</h1>
+        <p class="subtitle">Técnica SRS con Pelota Antiestrés</p>
 
-        <!-- Texto de instrucción arriba del cuadro -->
-        <div class="instruction" id="instructionText">Listo</div>
+        <div class="instruction" id="instructionText">Listo para iniciar</div>
+        <div class="sub-instruction" id="subInstructionText">Presiona el botón para comenzar</div>
 
-        <div class="box-container">
-            <!-- Representación en SVG de la Pelota Somática en el centro -->
-            <div class="center-graphic-wrapper">
-                <svg class="stress-ball" id="stressBall" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="42" fill="url(#ballGradient)" />
-                    <circle cx="50" cy="50" r="42" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-                    <!-- Brillo de la pelota -->
-                    <ellipse cx="38" cy="35" rx="10" ry="6" fill="#ffffff" fill-opacity="0.25" transform="rotate(-30 38 35)"/>
-                    <defs>
-                        <radialGradient id="ballGradient" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(35 32) rotate(50) scale(60)">
-                            <stop stop-color="#9d8ec4"/>
-                            <stop offset="0.7" stop-color="#7b6ba8"/>
-                            <stop offset="1" stop-color="#5c4d8a"/>
-                        </radialGradient>
-                    </defs>
-                </svg>
-            </div>
-
-            <!-- Trazo del Cuadrado Visual -->
-            <svg class="box-svg" viewBox="0 0 220 220">
-                <rect class="box-bg" x="15" y="15" width="190" height="190" rx="20"/>
-                <rect id="boxProgress" class="box-progress" x="15" y="15" width="190" height="190" rx="20"/>
-            </svg>
+        <div class="ball-wrapper">
+            <div class="somatic-ball" id="somaticBall"></div>
         </div>
 
-        <div class="timer-info" id="statusText">Presiona Iniciar para comenzar</div>
-
         <button class="btn" id="startBtn" onclick="toggleExercise()">Iniciar Ejercicio</button>
-        <button class="btn btn-skip" id="skipBtn" onclick="skipIntro()">Saltar Intro</button>
+        <button class="btn btn-skip" id="skipBtn" onclick="skipIntro()">Saltar Explicación Teórica</button>
     </div>
 
     <script>
-        // -------------------------------------------------------------
-        // CARGA DE AUDIOS DESDE LA CARPETA EXACTA "Audios1/" DE GITHUB
-        // -------------------------------------------------------------
+        // Música de fondo
         const bgMusic = new Audio('Audios1/Audio9.mp3');
         bgMusic.loop = true;
-        bgMusic.volume = 0.3;
+        bgMusic.volume = 0.25;
 
+        // Audios de Voz Guía
         const voiceAudios = {
-            intro: new Audio('Audios1/Audio1.mp3'),    // Explicación teórica de la técnica SRS
-            exercise: new Audio('Audios1/Audio2.mp3')  // Guía práctica: Aprieta, Inhala, Sostén, Exhala, Libera
+            intro: new Audio('Audios1/Audio1.mp3'),
+            practice: new Audio('Audios1/Audio2.mp3')
         };
 
         let isRunning = false;
-        let isIntroPhase = false;
-        let currentVoiceAudio = null;
-        let animationFrameId = null;
+        let currentAudio = null;
+        let syncCheckInterval = null;
 
         const instructionText = document.getElementById('instructionText');
-        const statusText = document.getElementById('statusText');
+        const subInstructionText = document.getElementById('subInstructionText');
         const startBtn = document.getElementById('startBtn');
         const skipBtn = document.getElementById('skipBtn');
-        const boxProgress = document.getElementById('boxProgress');
-        const stressBall = document.getElementById('stressBall');
+        const somaticBall = document.getElementById('somaticBall');
 
-        const TOTAL_PERIMETER = 760;
-        boxProgress.style.strokeDasharray = TOTAL_PERIMETER;
-        boxProgress.style.strokeDashoffset = TOTAL_PERIMETER;
+        // MAPA DE TIEMPOS EXACTOS (Sincronizados con Audio2.mp3)
+        // [Inicio (seg), Fin (seg), Texto Principal, Texto Secundario, Clase Pelota]
+        const TIMINGS = [
+            [0, 5, "Prepárate", "Toma la pelota en tu mano dominante", ""],
+            [5, 8.5, "Inhala y Aprieta", "1... 2... 3... 4...", "squeeze"],
+            [8.5, 11.5, "Sostén", "Siente la tensión retenida", "hold"],
+            [11.5, 17, "Exhala y Libera", "1... 2... 3... 4... Abre la mano", "release"],
+            [17, 20.5, "Inhala y Aprieta", "1... 2... 3... 4...", "squeeze"],
+            [20.5, 27.5, "Sostén", "Deposita la carga de ansiedad ahí", "hold"],
+            [27.5, 32, "Exhala y Libera", "1... 2... 3... 4...", "release"],
+            [32, 35.5, "Inhala y Aprieta", "1... 2... 3... 4...", "squeeze"],
+            [35.5, 38.5, "Sostén la presión", "Siente tus músculos tensionados", "hold"],
+            [38.5, 43.5, "Exhala y Libera despacio", "1... 2... 3... 4...", "release"],
+            [43.5, 52, "Inhala profundo", "Siente la forma de la pelota", ""],
+            [52, 57.5, "Exhala", "Mano relajada y abierta", "release"],
+            [57.5, 61, "Respiración Suave", "Inhala...", ""],
+            [61, 65, "Exhala", "Suelta el aire suavemente...", "release"],
+            [65, 82, "Rueda la pelota", "Siente su textura, contacto y temperatura entre tus palmas", ""],
+            [82, 85.5, "Inhala", "Recuperando el control...", ""],
+            [85.5, 88.5, "Sostén", "Cuerpo en calma", "hold"],
+            [88.5, 93, "Exhala y Libera", "Sensación de seguridad completa", "release"],
+            [93, 100, "Ejercicio Completado", "Has restaurado la estabilidad de tu cuerpo", ""]
+        ];
 
         function toggleExercise() {
             if (isRunning) {
@@ -238,141 +221,94 @@
 
         function startExercise() {
             isRunning = true;
-            isIntroPhase = true;
-            startBtn.textContent = 'Detener';
-            startBtn.style.backgroundColor = '#d9534f';
+            startBtn.textContent = 'Detener Ejercicio';
+            startBtn.classList.add('btn-stop');
             skipBtn.style.display = 'block';
 
-            // Iniciar música de fondo ambiental
             bgMusic.currentTime = 0;
-            bgMusic.play().catch(err => console.warn("La reproducción automática de música fue bloqueada:", err));
+            bgMusic.play().catch(e => console.warn("Música bloqueada:", e));
 
-            // Fase 1: Audio 1 (Introducción Teórica SRS)
-            instructionText.textContent = "Introducción Somática";
-            statusText.textContent = "Escuchando teoría SRS...";
-            
-            playVoiceAudio(voiceAudios.intro, () => {
-                // Al terminar Audio 1, pasar automáticamente al Audio 2
-                startPracticalExercise();
-            });
-        }
+            // Iniciar Audio 1 (Teoría)
+            currentAudio = voiceAudios.intro;
+            instructionText.textContent = "Fundamentación Somática";
+            subInstructionText.textContent = "Escucha la explicación teórica...";
+            setBallState("");
 
-        function playVoiceAudio(audioObj, onEndedCallback) {
-            if (!isRunning) return;
+            currentAudio.currentTime = 0;
+            currentAudio.play().catch(e => console.warn("Audio 1 bloqueado:", e));
 
-            currentVoiceAudio = audioObj;
-            currentVoiceAudio.currentTime = 0;
-
-            currentVoiceAudio.play().catch(err => {
-                console.warn("Error reproduciendo voz:", err);
-                if (isRunning && onEndedCallback) onEndedCallback();
-            });
-
-            currentVoiceAudio.onended = () => {
-                if (isRunning && onEndedCallback) {
-                    onEndedCallback();
-                }
+            currentAudio.onended = () => {
+                if (isRunning) startPracticeSequence();
             };
         }
 
         function skipIntro() {
             if (!isRunning) return;
-
-            if (currentVoiceAudio) {
-                currentVoiceAudio.pause();
-                currentVoiceAudio.currentTime = 0;
-                currentVoiceAudio.onended = null;
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.onended = null;
             }
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
-
-            startPracticalExercise();
+            startPracticeSequence();
         }
 
-        function startPracticalExercise() {
-            isIntroPhase = false;
+        function startPracticeSequence() {
             skipBtn.style.display = 'none';
-            statusText.textContent = "Sigue la voz y la guía visual";
+            currentAudio = voiceAudios.practice;
+            currentAudio.currentTime = 0;
 
-            currentVoiceAudio = voiceAudios.exercise;
-            currentVoiceAudio.currentTime = 0;
+            currentAudio.play().catch(e => console.warn("Audio 2 bloqueado:", e));
 
-            currentVoiceAudio.play().catch(err => console.warn("Error en audio práctico:", err));
+            // Intervalo de sincronización fina en milisegundos
+            syncCheckInterval = setInterval(syncDisplayWithAudio, 100);
 
-            currentVoiceAudio.onended = () => {
+            currentAudio.onended = () => {
                 if (isRunning) {
-                    instructionText.textContent = "¡Completado!";
-                    statusText.textContent = "Calma y regulación activadas";
-                    setTimeout(stopExercise, 3000);
+                    clearInterval(syncCheckInterval);
+                    instructionText.textContent = "Calma Restaurada";
+                    subInstructionText.textContent = "Puedes repetir la práctica cuando lo necesites";
+                    setBallState("");
+                    setTimeout(stopExercise, 4000);
                 }
             };
-
-            // Iniciar animación sincronizada en tiempo real con Audio2
-            syncExerciseAnimation();
         }
 
-        function syncExerciseAnimation() {
-            if (!isRunning || isIntroPhase || currentVoiceAudio !== voiceAudios.exercise) return;
+        function syncDisplayWithAudio() {
+            if (!isRunning || !currentAudio) return;
+            const t = currentAudio.currentTime;
 
-            const t = voiceAudios.exercise.currentTime;
-            const duration = (voiceAudios.exercise.duration && !isNaN(voiceAudios.exercise.duration) && voiceAudios.exercise.duration > 0)
-                             ? voiceAudios.exercise.duration 
-                             : 90;
+            const currentMatch = TIMINGS.find(step => t >= step[0] && t < step[1]);
 
-            // Avance del marco externo progresivo
-            const globalProgress = Math.min(1, Math.max(0, t / duration));
-            boxProgress.style.strokeDashoffset = TOTAL_PERIMETER - (globalProgress * TOTAL_PERIMETER);
-
-            // Ciclo somático de 16 segundos (4s Presiona/Inhala, 4s Sostén, 4s Exhala/Libera, 4s Descanso)
-            const cycleDuration = 16;
-            const phaseTime = t % cycleDuration;
-            const phase = Math.floor((phaseTime / cycleDuration) * 4);
-
-            if (phase === 0) {
-                instructionText.textContent = "Inhala y Aprieta";
-                stressBall.style.transform = "scale(0.75)"; // Se comprime la pelota
-                boxProgress.style.stroke = "var(--primary-color)";
-            } else if (phase === 1) {
-                instructionText.textContent = "Sostén";
-                stressBall.style.transform = "scale(0.70)"; // Mantener presión máxima
-                boxProgress.style.stroke = "var(--primary-dark)";
-            } else if (phase === 2) {
-                instructionText.textContent = "Exhala y Libera";
-                stressBall.style.transform = "scale(0.92)"; // Soltar presión paulatinamente
-                boxProgress.style.stroke = "var(--accent-color)";
-            } else if (phase === 3) {
-                instructionText.textContent = "Vacío / Calma";
-                stressBall.style.transform = "scale(1.0)"; // Estado relajado
-                boxProgress.style.stroke = "#b8b0d3";
+            if (currentMatch) {
+                instructionText.textContent = currentMatch[2];
+                subInstructionText.textContent = currentMatch[3];
+                setBallState(currentMatch[4]);
             }
+        }
 
-            if (!voiceAudios.exercise.paused && !voiceAudios.exercise.ended && isRunning) {
-                animationFrameId = requestAnimationFrame(syncExerciseAnimation);
+        function setBallState(stateClass) {
+            somaticBall.className = "somatic-ball";
+            if (stateClass) {
+                somaticBall.classList.add(stateClass);
             }
         }
 
         function stopExercise() {
             isRunning = false;
-            isIntroPhase = false;
 
             bgMusic.pause();
-            bgMusic.currentTime = 0;
-
-            if (currentVoiceAudio) {
-                currentVoiceAudio.pause();
-                currentVoiceAudio.currentTime = 0;
-                currentVoiceAudio.onended = null;
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                currentAudio.onended = null;
             }
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
-            // Restablecer valores originales
-            boxProgress.style.strokeDashoffset = TOTAL_PERIMETER;
-            boxProgress.style.stroke = "var(--primary-color)";
-            stressBall.style.transform = "scale(1.0)";
+            if (syncCheckInterval) clearInterval(syncCheckInterval);
 
-            instructionText.textContent = 'Listo';
-            statusText.textContent = 'Presiona Iniciar para comenzar';
+            setBallState("");
+            instructionText.textContent = "Listo para iniciar";
+            subInstructionText.textContent = "Presiona el botón para comenzar";
             startBtn.textContent = 'Iniciar Ejercicio';
-            startBtn.style.backgroundColor = 'var(--primary-color)';
+            startBtn.classList.remove('btn-stop');
             skipBtn.style.display = 'none';
         }
     </script>
